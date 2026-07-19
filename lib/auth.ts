@@ -24,9 +24,7 @@ const client = new MongoClient(mongoUri);
 const db = client.db();
 
 export const auth = betterAuth({
-  database: mongodbAdapter(db, {
-    client,
-  }),
+  database: mongodbAdapter(db),
   baseURL: process.env.BETTER_AUTH_URL,
   plugins: [bearer()],
   emailAndPassword: {
