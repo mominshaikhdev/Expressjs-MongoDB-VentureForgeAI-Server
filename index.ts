@@ -86,6 +86,21 @@ app.get("/", (req: any, res: any) => {
     "Content-Security-Policy",
     "default-src 'self' http: https: data: blob: 'unsafe-inline'; connect-src 'self' http: https:;",
   );
+
+  const isProd = process.env.NODE_ENV === "production" || process.env.VERCEL;
+  const allowedOrigins = process.env.FRONTEND_URL
+    ? process.env.FRONTEND_URL.split(",").map((o) => o.trim())
+    : [];
+  const frontendUrl = allowedOrigins[0] || "http://localhost:3000";
+
+  const statusMessage = isProd
+    ? "The Express API backend and Groq LLM validator service is running in production."
+    : `The Express API backend and Groq LLM validator is active and listening on port ${PORT}.`;
+
+  const buttonText = isProd
+    ? "Launch Frontend Portal"
+    : "Launch Frontend Portal (Port 3000)";
+
   res.send(`
     <!DOCTYPE html>
     <html lang="en">
@@ -146,9 +161,9 @@ app.get("/", (req: any, res: any) => {
       <body>
         <div class="card">
           <h1>VentureForge AI Service</h1>
-          <p>The Express API backend and Groq LLM validator is active and listening on port 5000.</p>
+          <p>${statusMessage}</p>
           <p>To access the client interface and start forging startup plans, please navigate to the frontend portal.</p>
-          <a href="http://localhost:3000" class="btn">Launch Frontend Portal (Port 3000)</a>
+          <a href="${frontendUrl}" class="btn">${buttonText}</a>
         </div>
       </body>
     </html>
